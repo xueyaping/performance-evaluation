@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>主管级员工月度绩效互评</title>
+
+    <!-- Bootstrap -->
+    <link href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="./css/bootstrap.min.css">
+    <link href="css/star-rating.css" media="all" rel="stylesheet" type="text/css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+    <style>
+        .bar{position:absolute;
+            left:35%;right:35%;background: red;height:0;}
+        h5{margin-bottom:10px}
+    </style>
+    <script>
+        var ref=new Wilddog("https://pes.wilddogio.com");
+        var times0=0;
+        var times1=0;
+        var counter=new Array();
+        var dHt;
+        var aHt;
+        /*ref.set({
+
+                admin:{
+                    scoring:{agree:0,degree:0},
+                    depMag:{
+                        name:"zengxiaochao",id:""
+                    },
+                    info: {
+                        prdGroup: {
+                            zhufeng: {name: "zhufeng", id: "p_photology", score: 0},
+                            fengyunfeng: {name: "fengyunfeng", id: "p_p001", score: 0}
+                        },
+                        techGroup: {
+                            fengxiaoyun: {name: "fengxiaoyun", id: "t_s001", score: 0},
+                            xue: {name: "xue", id: "t_001", score: 0},
+                            wangjianping: {name: "wangjianping", id: "t_s001", score: 0}
+                        },
+                        manager:{
+                            qlg: {name: "qiulonggang", id: "m_s001", score: 0},
+                            fyf: {name: "fengxiaoyun", id: "m_p001", score: 0},
+                            ghg:{name: "guohaogang", id: "m_p001", score: 0},
+                            lh:{name: "lihui", id: "m_p001", score: 0}
+                        }
+                    }
+                }
+        });*/
+
+
+
+        function showCounts(){
+            ref.child("voter1").on("value",function(snap){
+                values=snap.val();
+                counter={agree:values.agree,degree:values.degree};
+                result1=counter.agree+counter.degree;
+                $("#counts-agree").text("共 "+result1+" 票");
+                aHt=$("#bar-agree");
+                dHt=$("#bar-degree");
+                if(result1>0){
+                    aHt.height(result1);
+                    aHt.css({'bottom':'50%','opacity':'1'});
+                }else if(result1==0){
+                    aHt.css({'bottom':'50%','opacity':'0'});
+                    dHt.css({'top':'50%','opacity':'0'});
+                }else{
+                    dHt.height(Math.abs(result1));
+                    dHt.css({'top':'50%','opacity':'1'});
+                }
+            });
+
+
+        }
+        $(document).ready(function(){
+
+            showCounts();
+            $('#btn-agree1').click(function() {
+                agreeId=$(this).attr("id");
+                counter.agree++;
+                ref.update({voter1:{agree:counter.agree,degree:counter.degree}});
+                // agreeHt();
+                showCounts();
+            });
+
+            $('#btn-degree1').click(function() {
+                degreeId=$(this).attr("id");
+                counter.degree--;
+                ref.update({voter1:{agree:counter.agree,degree:counter.degree}});
+                showCounts();
+            });
+
+        })
+    </script>
+</head>
+<body>
+
+
+<!--<script>
+   $(document).ready(function () {
+        $(".rating-kv").rating();
+
+    });
+
+</script>-->
+
+
+<div class="container">
+    <h1 class="page-header text-center">研发部主管级员工月度绩效互评</h1>
+    <div class="row">
+        <form>
+            <!--<input id="input-2b" type="number" class="rating" min="0" max="5" step="0.5" data-size="xl"
+                   data-symbol="&#xe005;" data-default-caption="{rating} hearts" data-star-captions="{}">
+            <br>
+            <input id="input-21a" value="0" type="number" class="rating" min=0 max=5 step=0.5 data-size="xl" >
+            <br>
+            <input id="input-21b" value="4" type="number" class="rating" min=0 max=5 step=0.2 data-size="lg">
+            <br>
+            <input id="input-21c" value="0" type="number" class="rating" min=0 max=8 step=0.5 data-size="xl" data-stars="8">
+            <br>
+            <input id="input-21d" value="2" type="number" class="rating" min=0 max=5 step=0.5 data-size="sm">
+            <br>
+            <input id="input-21e" value="0" type="number" class="rating" min=0 max=5 step=0.5 data-size="xs" >
+            <br>
+            <input id="input-21f" value="0" type="number" class="rating" min=0 max=5 step=0.5 data-size="md" >
+            <br>
+            <input id="input-22"  value="0" type="number" class="rating" min=0 max=5 step=0.5 data-rtl=1 data-container-class='' data-glyphicon=0>
+            <div class="clearfix"></div>
+
+            <input id="input-2ba" type="number" class="rating" min="0" max="10" step="1" data-stars=10
+                   data-symbol="&#xe005;" data-default-caption="{rating} 分" data-star-captions="{}">
+            <br>
+             -->
+            <div class="col-xs-12 col-md-6 col-md-offset-3 text-center" >
+                <section>
+                    <ul class="list-inline" >
+                        <li><button id="btn-agree1">支持</button></li>
+                        <li><button id="btn-degree1">反对</button></li>
+                    </ul>
+                    <h5 class="text-center" id="counts-agree"></h5>
+                    <br/>
+                </section>
+                <section style="height: 400px;">
+
+                    <div class="bar" id="bar-agree"></div>
+                    <div class="bar" id="bar-degree"></div>
+
+                </section>
+            </div>
+
+
+            <div class="form-group">
+                <button id="sub" type="button" class="btn btn-primary" onclick="sub()">Submit</button>
+                <button type="reset" class="btn btn-default">Reset</button>
+            </div>
+        </form>
+
+        <table class="table table-bordered">
+            <thead>
+            <tr><th>姓名：</th><th>部门：</th><th>岗位：</th><th>月份：</th></tr>
+            </thead>
+            <tbody>
+            <tr><td>互评分</td><td> </td><th>最终得分</th></tr>
+            </tbody>
+        </table>
+
+    </div>
+
+
+</div>
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="http://apps.bdimg.com/libs/jquery/2.0.0/jquery.min.js"></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="./js/bootstrapValidator.js"></script><!--表单验证-->
+<!--野狗入SDK引入-->
+<script src = "https://cdn.wilddog.com/js/client/current/wilddog.js" ></script>
+</body>
+</html>

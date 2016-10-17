@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>performance evaluation system</title>
+
+    <!-- Bootstrap -->
+    <link href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/bootstrap.min.css">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="http://apps.bdimg.com/libs/jquery/2.0.0/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+<!--野狗入SDK引入-->
+<script src = "https://cdn.wilddog.com/js/client/current/wilddog.js" ></script>
+
+<script>
+
+
+    var db=openDatabase('myDB','1.0','test db',2 * 1024 * 1024);
+    function add(){
+        db.transaction(function(fx){ /*执行操作*/
+            fx.executeSql('create table if not exists UserInfor(UserName TEXT,Pwd TEXT)',[]);//在myDB中创建一个名为UserInfor的表
+            var username=$('#txtUName').val();
+            var pwd=$('#txtPwd').val();
+            fx.executeSql('insert into UserInfor values(?,?)',[username,pwd],function(){//在表中插入动态数据
+                alert("添加成功")
+            });
+        })
+    }
+    function search(){//读取表中数据
+        var sql='select*from UserInfor where 1=1';
+        var username=$('#txtFName').val();
+        if(username!=""){
+            sql+=" and UserName='"+username+"'";
+        }
+        db.transaction(function(fx){
+            $('#conShow').html("");//清空记录
+            fx.executeSql(sql,[],function(fx,rs){
+                var len=rs.rows.length;
+                msg = "查询记录条数: "+ len + "条";
+                $('#status').text(msg);
+
+                for(var i=0;i<len;i++){
+                    var megs='<p>'+rs.rows.item(i).UserName+'&nbsp;&nbsp;&nbsp;&nbsp;'+rs.rows.item(i).Pwd+'</p>';
+                    $('#conShow').append(megs);
+                }
+            });
+        })
+    }
+    function del(){//删除表中数据
+        db.transaction(function(fx){
+            var username=$('#txtDName').val();
+            fx.executeSql('Delete from UserInfor where UserName=?',[username],function(){
+                alert("记录已删除！");
+                search()
+            });
+        })
+    }
+
+
+</script>
+<div class="container-fluid">
+    <h1 class="page-header text-center">用户信息</h1>
+    <div class="container text-center">
+        <div class="form-group">
+            <input type="text" id="txtUName" placeholder="用户名"/>
+            <input type="password" id="txtPwd" placeholder="密码"/>
+            <input type="button" value="添加" id="btnAdd" onclick="add()"><br/><br/>
+        </div>
+        <div class="form-group">
+            <input type="text" id="txtFName" placeholder=""/>
+            <input type="button" value="查询" id="btnFind" onclick="search()">
+        </div>
+        <div class="form-group">
+            <input type="text" id="txtDName" placeholder=""/>
+            <input type="button" value="删除" id="btnDelete" onclick="del()">
+        </div>
+        <div class="col-md-4 col-md-offset-4 form-group ">
+            <p id="status"></p>
+            <div id="conShow" class="text-left"></div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
